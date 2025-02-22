@@ -1,0 +1,73 @@
+
+Run
+Copy code
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Distance and Duration Calculator</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+        h1 {
+            color: #343a40;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: #28a745;
+        }
+        .error {
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center">Driving Distance and Duration Calculator</h1>
+        <form id="distanceForm">
+            <div class="form-group">
+                <label for="start">Start Destination:</label>
+                <input type="text" class="form-control" id="start" name="start" required>
+            </div>
+            <div class="form-group">
+                <label for="end">End Destination:</label>
+                <input type="text" class="form-control" id="end" name="end" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Calculate</button>
+        </form>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $('#distanceForm').on('submit', function(event) {
+                event.preventDefault();
+                $.ajax({
+                    type: 'POST',
+                    url: '/get_distance',
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        if (response.error) {
+                            $('#result').html('<p class="error">Error: ' + response.error + '</p>');
+                        } else {
+                            $('#result').html('<p>Your drive will cover a total distance of <strong>' + response.distance + '</strong>, taking a total time of <strong>' + response.duration + '</strong>.</p>');
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
